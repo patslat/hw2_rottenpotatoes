@@ -43,7 +43,7 @@ class MoviesController < ApplicationController
   private
 
   def sort_by
-    Movie.column_names.include?(params[:sort]) ? params[:sort] : "title"
+    Movie.column_names.include?(params[:sort]) ? params[:sort] : nil
   end
 
 end

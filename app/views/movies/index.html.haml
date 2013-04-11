@@ -4,9 +4,9 @@
 %table#movies
   %thead
     %tr
-      %th{:class=>"title" == @sort_by ? "hilite" : nil}= sorter "title", "Movie Title"
+      %th{:class => "title" == @sort_by ? "hilite" : nil}= sorter "title", "Movie Title"
       %th Rating
-      %th{:class=>"release_date" == @sort_by ? "hilite" : nil}= sorter "release_date", "Release Date"
+      %th{:class => "release_date" == @sort_by ? "hilite" : nil}= sorter "release_date", "Release Date"
       %th More Info
   %tbody
     - @movies.each do |movie|
