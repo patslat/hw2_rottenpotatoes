@@ -10,4 +10,5 @@ module MoviesHelper
     link_to title, {:sort => column, :ratings => params[:ratings]}, {:id => "#{column}_header"}
   end
 
+ 
 end

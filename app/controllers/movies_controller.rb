@@ -16,6 +16,10 @@ class MoviesController < ApplicationController
       session[:sort] = sort_by
       @rating_filter = params[:ratings].keys
       session[:ratings] = params[:ratings]
+    else
+      redirect_to redirector
+    end
+=begin
     elsif sort_by && !params[:ratings]
       if session[:ratings]
         redirect_to({:sort => params[:sort], :ratings => session[:ratings]})
@@ -47,7 +51,7 @@ class MoviesController < ApplicationController
         flash.keep
       end
     end
-
+=end
     @movies = Movie.where(:rating => @rating_filter).order(@sort_by)
 
   end
@@ -81,6 +85,32 @@ class MoviesController < ApplicationController
   end
 
   private
+
+   def redirector
+    if sort_by && !params[:ratings]
+      if session[:ratings]
+        {:sort => params[:sort], :ratings => session[:ratings]}
+      else
+        {:sort => params[:sort], :ratings => @all_ratings}
+      end
+    elsif !sort_by && params[:ratings]
+      if session[:sort]
+        {:sort => session[:sort], :ratings => params[:ratings]}
+      else
+        {:sort => nil, :ratings => params[:ratings]}
+      end
+    else
+      if session[:sort] && session[:ratings]
+        {:sort => session[:sort], :ratings => session[:ratings]}
+      elsif session[:sort] && !session[:ratings]
+        {:sort => session[:sort], :ratings => @all_ratings}
+      elsif !session[:sort] && session[:ratings]
+        {:sort => nil, :ratings => session[:ratings]}
+      else
+        {:sort => nil, :ratings => @all_ratings}
+      end
+    end
+  end
 
   def sort_by
     Movie.column_names.include?(params[:sort]) ? params[:sort] : nil
