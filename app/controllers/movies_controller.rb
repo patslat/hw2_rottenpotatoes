@@ -19,24 +19,32 @@ class MoviesController < ApplicationController
     elsif sort_by && !params[:ratings]
       if session[:ratings]
         redirect_to({:sort => params[:sort], :ratings => session[:ratings]})
+        flash.keep
       else
         redirect_to({:sort => params[:sort], :ratings => @all_ratings})
+        flash.keep
       end
     elsif !sort_by && params[:ratings]
       if session[:sort]
         redirect_to({:sort => session[:sort], :ratings => params[:ratings]})
+        flash.keep
       else
         redirect_to({:sort => nil, :ratings => params[:ratings]})
+        flash.keep
       end
     else
       if session[:sort] && session[:ratings]
         redirect_to({:sort => session[:sort], :ratings => session[:ratings]})
+        flash.keep
       elsif session[:sort] && !session[:ratings]
         redirect_to({:sort => session[:sort], :ratings => @all_ratings})
+        flash.keep
       elsif !session[:sort] && session[:ratings]
         redirect_to({:sort => nil, :ratings => session[:ratings]})
+        flash.keep
       else
         redirect_to({:sort => nil, :ratings => @all_ratings})
+        flash.keep
       end
     end
 
