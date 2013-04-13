@@ -8,10 +8,40 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @all_ratings = Movie.get_ratings
-    @sort_by = sort_by
-    @rating_filter = params[:ratings] ? params[:ratings].keys : @all_ratings
+    
+    @all_ratings = Movie.get_ratings.keys
+    
+    if sort_by && params[:ratings]
+      @sort_by = sort_by
+      session[:sort] = sort_by
+      @rating_filter = params[:ratings].keys
+      session[:ratings] = params[:ratings]
+    elsif sort_by && !params[:ratings]
+      if session[:ratings]
+        redirect_to({:sort => params[:sort], :ratings => session[:ratings]})
+      else
+        redirect_to({:sort => params[:sort], :ratings => @all_ratings})
+      end
+    elsif !sort_by && params[:ratings]
+      if session[:sort]
+        redirect_to({:sort => session[:sort], :ratings => params[:ratings]})
+      else
+        redirect_to({:sort => nil, :ratings => params[:ratings]})
+      end
+    else
+      if session[:sort] && session[:ratings]
+        redirect_to({:sort => session[:sort], :ratings => session[:ratings]})
+      elsif session[:sort] && !session[:ratings]
+        redirect_to({:sort => session[:sort], :ratings => @all_ratings})
+      elsif !session[:sort] && session[:ratings]
+        redirect_to({:sort => nil, :ratings => session[:ratings]})
+      else
+        redirect_to({:sort => nil, :ratings => @all_ratings})
+      end
+    end
+
     @movies = Movie.where(:rating => @rating_filter).order(@sort_by)
+
   end
 
   def new
